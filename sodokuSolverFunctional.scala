@@ -1,6 +1,3 @@
-//DOESNT WORK-NO SOLUTION ERROR
-
-
 // Sudoku board as a multidimensional array
 val board: Array[Array[Int]] = Array.ofDim[Int](9, 9)
 
@@ -16,59 +13,59 @@ board(8) = Array(0, 0, 9, 0, 7, 1, 0, 0, 4)
 
 // Utility function to display the Sudoku board
 def boardDisplay(board: Array[Array[Int]]): Unit = {
-  board.foreach { row =>
+board.foreach { row =>
     row.foreach { cell =>
-      print(cell + " ")
+    print(cell + " ")
     }
     println()
-  }
+}
 }
 
 // Function to find an empty cell (cell with value 0)
 def findEmptyCell(board: Array[Array[Int]]): Option[(Int, Int)] = {
-  val cells = for {
+val cells = for {
     row <- 0 until 9
     col <- 0 until 9
     if board(row)(col) == 0
-  } yield (row, col)
+} yield (row, col)
 
-  cells.headOption
+cells.headOption
 }
 
 // Function to validate if a value can be placed in a cell
 def isValid(board: Array[Array[Int]], row: Int, col: Int, num: Int): Boolean = {
-  val rowValid = !board(row).contains(num)
-  val colValid = !board.map(_(col)).contains(num)
-  val squareValid = {
+val rowValid = !board(row).contains(num)
+val colValid = !board.map(_(col)).contains(num)
+val squareValid = {
     val startRow = 3 * (row / 3)
     val startCol = 3 * (col / 3)
     !board.slice(startRow, startRow + 3).flatMap(_.slice(startCol, startCol + 3)).contains(num)
-  }
-  rowValid && colValid && squareValid
+}
+rowValid && colValid && squareValid
 }
 // Recursive Sudoku solver function that returns all solutions
 def solveSudoku(board: Array[Array[Int]]): List[Array[Array[Int]]] = {
-  findEmptyCell(board) match {
+findEmptyCell(board) match {
     case Some((row, col)) =>
-      (1 to 9).flatMap { num =>
+    (1 to 9).flatMap { num =>
         if (isValid(board, row, col, num)) {
-          val newBoard = board.map(_.clone()) // Clone the board
-          newBoard(row)(col) = num
-          solveSudoku(newBoard)
+        val newBoard = board.map(_.clone())
+        newBoard(row)(col) = num
+        solveSudoku(newBoard)
         } else List()
-      }.toList
+    }.toList
     case None => List(board.clone())
-  }
+}
 }
 
 // Solve and display all Sudoku solutions
 val solutions = solveSudoku(board)
 if (solutions.nonEmpty) {
-  println(s"Found ${solutions.length} solution(s):")
-  solutions.foreach { solution =>
+println(s"Found ${solutions.length} solution(s):")
+solutions.foreach { solution =>
     boardDisplay(solution)
     println()
-  }
+}
 } else {
-  println("No solution found for the Sudoku.")
+println("No solution found for the Sudoku.")
 }
